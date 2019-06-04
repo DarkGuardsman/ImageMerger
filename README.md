@@ -37,6 +37,13 @@ Example:
 }
 ```
 
+## Relative paths
+Paths are relative to the run location unless using json. In which they will be relative to the location of the json file used.
+
+./path -> one folder down from run location
+
+./../path -> one folder up from run location
+
 
 ## Exit codes
 
