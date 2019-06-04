@@ -1,11 +1,16 @@
 package com.darkguardsman.image;
 
 import com.darkguardsman.image.data.MergeData;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
@@ -104,9 +109,40 @@ public class ImageMerger
         return null;
     }
 
-    public static void json(File file)
+    public static void json(File file) throws IOException
     {
+        if(file.exists())
+        {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            JsonParser parser = new JsonParser();
+            JsonObject jsonData = parser.parse(br).getAsJsonObject();
 
+            final MergeData mergeData = new MergeData();
+            if (jsonData.has("output"))
+            {
+                mergeData.outputFolder = new File(jsonData.getAsJsonPrimitive("output").getAsString());
+            }
+
+            //Load files
+            JsonArray baseImages = jsonData.getAsJsonArray("base");
+            JsonArray mergeImages = jsonData.getAsJsonArray("merge");
+
+            for(JsonElement element : baseImages)
+            {
+                mergeData.baseImageFiles.add(new File(element.getAsString()));
+            }
+            for(JsonElement element : mergeImages)
+            {
+                mergeData.mergeImageFiles.add(new File(element.getAsString()));
+            }
+
+            //Run
+            MergeProcessor.process(mergeData);
+        }
+        else
+        {
+            error("Failed to locate json file " + file, true);
+        }
     }
 
     public static void error(String msg, boolean exit)

@@ -1,0 +1,9 @@
+{
+	"output": "./output",
+	"base" : [
+		"./test_images/base/"
+	],
+	"merge" : [
+		"./test_images/merge/"
+	]
+}
