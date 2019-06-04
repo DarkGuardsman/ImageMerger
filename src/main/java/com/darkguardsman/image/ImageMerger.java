@@ -1,5 +1,7 @@
 package com.darkguardsman.image;
 
+import com.darkguardsman.image.data.MergeData;
+
 import java.io.File;
 import java.util.HashMap;
 

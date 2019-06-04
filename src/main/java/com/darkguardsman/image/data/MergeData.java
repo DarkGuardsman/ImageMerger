@@ -1,6 +1,5 @@
-package com.darkguardsman.image;
+package com.darkguardsman.image.data;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,10 +13,12 @@ public class MergeData
     public final List<File> baseImageFiles = new ArrayList();
     public final List<File> mergeImageFiles = new ArrayList();
 
-    public final List<BufferedImage> baseImages = new ArrayList();
-    public final List<BufferedImage> mergeImages = new ArrayList();
+    public final List<ImageData> baseImages = new ArrayList();
+    public final List<ImageData> mergeImages = new ArrayList();
 
     public File outputFolder;
+
+    public boolean mergeAll = true;
 
     public void setup()
     {
