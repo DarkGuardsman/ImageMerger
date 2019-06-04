@@ -20,13 +20,27 @@ public class MergeProcessor
 
     public static void process(MergeData data) throws IOException
     {
+        ImageMerger.info("Setting up data...");
         data.setup();
 
+        ImageMerger.info("\nFlattening folders paths to file paths...");
+        ImageMerger.info("Files: " + data.baseImageFiles.size() + " " + data.mergeImageFiles.size());
         flattenFiles(data);
+        ImageMerger.info("Files: " + data.baseImageFiles.size() + " " + data.mergeImageFiles.size());
+
+        ImageMerger.info("\nValidating files...");
         validateFiles(data);
+
+        ImageMerger.info("\nLoading images...");
         loadImages(data);
+
+        ImageMerger.info("\nValidating images...");
         validateImages(data);
+
+        ImageMerger.info("\nMerging images...");
         mergeImages(data);
+
+        ImageMerger.info("\nProcessing completed");
     }
 
     public static void flattenFiles(MergeData data)
@@ -138,9 +152,10 @@ public class MergeProcessor
                     name += "_" + mergeData.getName();
                     g.drawImage(mergeData.image, 0, 0, null);
                 }
+                g.dispose();
 
                 //Output
-                ImageIO.write(combined, "PNG", new File(data.outputFolder, name + ".png"));
+                outputImage(combined, new File(data.outputFolder, name + ".png"));
             }
             //Merge 1 file at a time creating permutations
             else
@@ -154,12 +169,19 @@ public class MergeProcessor
                     Graphics g = combined.getGraphics();
                     g.drawImage(base, 0, 0, null);
                     g.drawImage(mergeData.image, 0, 0, null);
+                    g.dispose();
 
                     //Output
                     String name = baseData.getName() + "_" + mergeData.getName();
-                    ImageIO.write(combined, "PNG", new File(data.outputFolder, name + ".png"));
+                    outputImage(combined, new File(data.outputFolder, name + ".png"));
                 }
             }
         }
+    }
+
+    public static void outputImage(BufferedImage combined, File out) throws IOException
+    {
+        ImageMerger.info("Outputting file: " + out);
+        ImageIO.write(combined, "PNG", out);
     }
 }

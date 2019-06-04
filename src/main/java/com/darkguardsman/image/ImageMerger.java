@@ -3,7 +3,11 @@ package com.darkguardsman.image;
 import com.darkguardsman.image.data.MergeData;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.stream.Collectors;
 
 /**
  * Created by Dark(DarkGuardsman, Robert) on 2019-06-04.
@@ -11,14 +15,17 @@ import java.util.HashMap;
 public class ImageMerger
 {
 
-    public static void main(String... args)
+    public static void main(String... args) throws IOException
     {
+        info("Starting...");
+        info("Args: " + Arrays.toString(args));
         if (args != null && args.length > 0)
         {
-            HashMap<String, String> argMap = loadArgs(args);
+            final HashMap<String, String> argMap = loadArgs(args);
 
             if (argMap.containsKey("json"))
             {
+                info("Json path set to '" + argMap.get("json") + "'");
                 json(new File(argMap.get("json")));
             }
             else if (argMap.containsKey("baseImages") && argMap.containsKey("mergeImages"))
@@ -28,10 +35,28 @@ public class ImageMerger
                 {
                     data.outputFolder = new File(argMap.get("output"));
                 }
+
+                //Get image paths
+                final String baseImageString = argMap.get("baseImages");
+                final String mergeImageString = argMap.get("mergeImages");
+
+                info("Base Image Paths: " + baseImageString);
+                info("Merge Image Paths: " + mergeImageString);
+
+                //Split
+                String[] baseImages = baseImageString.split(";");
+                String[] mergeImages = mergeImageString.split(";");
+
+                //Convert to files
+                data.baseImageFiles.addAll(Arrays.stream(baseImages).map(File::new).collect(Collectors.toList()));
+                data.mergeImageFiles.addAll(Arrays.stream(mergeImages).map(File::new).collect(Collectors.toList()));
+
+                //Run
+                MergeProcessor.process(data);
             }
             else
             {
-                System.err.println("ImageMerger: Invalid arguments!");
+                error("Invalid arguments!");
                 printHelp();
                 System.exit(1);
             }
@@ -41,6 +66,7 @@ public class ImageMerger
             File file = findJsonFile();
             if (file != null)
             {
+                info("Found json at " + file);
                 json(file);
             }
             else
@@ -52,6 +78,9 @@ public class ImageMerger
                 System.exit(2);
             }
         }
+
+        System.out.println("Completed...");
+        System.exit(0);
     }
 
     public static void printHelp()
@@ -82,7 +111,12 @@ public class ImageMerger
 
     public static void error(String msg)
     {
-        System.err.println("ImageMerger: " + msg);
+        System.err.println("[ImageMerger] " + msg);
+    }
+
+    public static void info(String msg)
+    {
+        System.out.println("[ImageMerger] " + msg);
     }
 
     /**
