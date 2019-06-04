@@ -40,6 +40,14 @@ public class ImageMerger
                 {
                     data.outputFolder = new File(argMap.get("output"));
                 }
+                if(argMap.containsKey("merge"))
+                {
+                    data.mergeAll = true;
+                }
+                if(argMap.containsKey("permutate"))
+                {
+                    data.mergeAll = false;
+                }
 
                 //Get image paths
                 final String baseImageString = argMap.get("baseImages");
@@ -121,6 +129,10 @@ public class ImageMerger
             if (jsonData.has("output"))
             {
                 mergeData.outputFolder = new File(jsonData.getAsJsonPrimitive("output").getAsString());
+            }
+            if(jsonData.has("merge"))
+            {
+                mergeData.mergeAll = jsonData.get("merge").getAsBoolean();
             }
 
             //Load files
