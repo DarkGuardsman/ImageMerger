@@ -65,7 +65,7 @@ public class ImageMerger
                 data.mergeImageFiles.addAll(Arrays.stream(mergeImages).map(File::new).collect(Collectors.toList()));
 
                 //Run
-                MergeProcessor.process(data);
+                MergeProcessor.process(new File(System.getProperty("user.dir")), data);
             }
             else
             {
@@ -149,11 +149,11 @@ public class ImageMerger
             }
 
             //Run
-            MergeProcessor.process(mergeData);
+            MergeProcessor.process(file.getParentFile(), mergeData);
         }
         else
         {
-            error("Failed to locate json file " + file, true);
+            error("Failed to locate json file " + file.getAbsolutePath(), true);
         }
     }
 

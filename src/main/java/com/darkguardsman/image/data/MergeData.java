@@ -20,11 +20,11 @@ public class MergeData
 
     public boolean mergeAll = true;
 
-    public void setup()
+    public void setup(File root)
     {
         if (outputFolder == null)
         {
-            outputFolder = new File(System.getProperty("user.dir"), "output");
+            outputFolder = new File(root, "output");
         }
 
         //Create output

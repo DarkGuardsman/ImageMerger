@@ -18,10 +18,10 @@ import java.util.stream.Collectors;
 public class MergeProcessor
 {
 
-    public static void process(MergeData data) throws IOException
+    public static void process(File root, MergeData data) throws IOException
     {
         ImageMerger.info("Setting up data...");
-        data.setup();
+        data.setup(root);
 
         ImageMerger.info("\nFlattening folders paths to file paths...");
         ImageMerger.info("Files: " + data.baseImageFiles.size() + " " + data.mergeImageFiles.size());
@@ -89,11 +89,11 @@ public class MergeProcessor
     {
         if (!file.exists())
         {
-            ImageMerger.error("Failed to locate file " + file, true);
+            ImageMerger.error("Failed to locate file " + file.getAbsolutePath(), true);
         }
         else if (!file.getName().endsWith(".png"))
         {
-            ImageMerger.error("Only .png files are supported " + file, true);
+            ImageMerger.error("Only .png files are supported " + file.getAbsolutePath(), true);
         }
     }
 
