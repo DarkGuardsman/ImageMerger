@@ -56,7 +56,7 @@ public class ImageMerger
             }
             else
             {
-                error("Invalid arguments!");
+                error("Invalid arguments!", false);
                 printHelp();
                 System.exit(1);
             }
@@ -73,7 +73,7 @@ public class ImageMerger
             {
                 error("Failed to locate image-merger-run.json! " +
                         "Either place a file matching the name in the same directory as the run location " +
-                        "or specify the data or path to the file.");
+                        "or specify the data or path to the file.", false);
                 printHelp();
                 System.exit(2);
             }
@@ -109,9 +109,13 @@ public class ImageMerger
 
     }
 
-    public static void error(String msg)
+    public static void error(String msg, boolean exit)
     {
         System.err.println("[ImageMerger] " + msg);
+        if(exit)
+        {
+            System.exit(1);
+        }
     }
 
     public static void info(String msg)

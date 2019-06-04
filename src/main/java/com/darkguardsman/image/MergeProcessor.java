@@ -55,7 +55,7 @@ public class MergeProcessor
         final List<File> flattenMerge = new ArrayList();
         for (File file : data.mergeImageFiles)
         {
-            flatten(file, flattenBase);
+            flatten(file, flattenMerge);
         }
 
         //Convert files to image data
@@ -81,19 +81,19 @@ public class MergeProcessor
 
     public static void validateFiles(MergeData data)
     {
-        data.baseImageFiles.forEach(file -> validateFile(file));
-        data.mergeImageFiles.forEach(file -> validateFile(file));
+        data.baseImages.forEach(imageData -> validateFile(imageData.file));
+        data.mergeImages.forEach(imageData -> validateFile(imageData.file));
     }
 
     public static void validateFile(File file)
     {
         if (!file.exists())
         {
-            ImageMerger.error("Failed to locate file " + file);
+            ImageMerger.error("Failed to locate file " + file, true);
         }
         else if (!file.getName().endsWith(".png"))
         {
-            ImageMerger.error("Only .png files are supported " + file);
+            ImageMerger.error("Only .png files are supported " + file, true);
         }
     }
 
@@ -116,11 +116,11 @@ public class MergeProcessor
                 final int h = image.image.getHeight();
                 if (w != width)
                 {
-                    ImageMerger.error("MergeProcessor >> Image widths do not match, expected " + width + " got " + w + ". File: " + image.file);
+                    ImageMerger.error("MergeProcessor >> Image widths do not match, expected " + width + " got " + w + ". File: " + image.file, true);
                 }
                 else if (h != height)
                 {
-                    ImageMerger.error("MergeProcessor >> Image heights do not match, expected " + height + " got " + h + ". File: " + image.file);
+                    ImageMerger.error("MergeProcessor >> Image heights do not match, expected " + height + " got " + h + ". File: " + image.file, true);
                 }
             }
         }
