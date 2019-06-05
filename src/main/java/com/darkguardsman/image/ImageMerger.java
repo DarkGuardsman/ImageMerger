@@ -134,9 +134,9 @@ public class ImageMerger
             br.close();
 
             //Json array of tasks or files to load
-            if (jsonData.has("json"))
+            if (jsonData.has("tasks"))
             {
-                final JsonArray baseImages = jsonData.getAsJsonArray("json");
+                final JsonArray baseImages = jsonData.getAsJsonArray("tasks");
                 for (JsonElement element : baseImages)
                 {
                     //Basic Task
@@ -174,9 +174,9 @@ public class ImageMerger
         {
             mergeData.outputFolder = new File(jsonData.getAsJsonPrimitive("output").getAsString());
         }
-        if (jsonData.has("merge"))
+        if (jsonData.has("merge_all"))
         {
-            mergeData.mergeAll = jsonData.get("merge").getAsBoolean();
+            mergeData.mergeAll = jsonData.get("merge_all").getAsBoolean();
         }
 
         //Load files

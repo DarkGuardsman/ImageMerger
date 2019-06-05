@@ -1,5 +1,5 @@
 {
-	"json" : [
+	"tasks" : [
 		{
 			"output": "./output",
 			"base" : [
