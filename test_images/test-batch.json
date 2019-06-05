@@ -1,0 +1,14 @@
+{
+	"json" : [
+		{
+			"output": "./output",
+			"base" : [
+				"./base/"
+			],
+			"merge" : [
+				"./merge/"
+			]
+		},
+		"./test.json"
+	]
+}
