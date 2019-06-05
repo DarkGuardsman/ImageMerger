@@ -16,6 +16,7 @@ Simple program designed to take in data supplied by run arguments or json data t
 * mergeImages -> images to layer over the base images, seperated by ;
 * mergeAll -> merge all images onto the base
 * permutate -> generate a new image per merge image for the base image
+* scale -> (true/false) allow scaling if set to true. True by default.
 
 ## Json
 
@@ -24,6 +25,7 @@ Simple program designed to take in data supplied by run arguments or json data t
 * key: merge -> son array of string containg paths to bmerge images
 * key: merge_all -> Optional (true/false) true for merging all merge images onto each base. false to generate a new image per merge image per base.
 * key: output -> Optional (string) path to output folder
+* key: scale -> Optional (true/false) true will scale images, false will not scale
 * key: tasks -> array of objects or paths to load, can't be used with the above keys
 
 ### Example-Data:
@@ -83,6 +85,11 @@ Simplist method is just to provide a JSON containing all the tasks to run or a l
 * 0 -> completed with no errors
 * 1 -> Generic error, likely failed to specify run arguments properly
 * 2 -> Failed to locate image-merger-run.json in the run directory
+
+## Scaling
+if scaling is enable the program will attempt to up size images to match the largest image found. This can only be done with images that are a factor of 2 in size. An example is an image of 16 being scaled to 64, it will be scaled to 4 times its size. If an image is 100 in size and the largest is 110 it will not work as 100 / 110 will result in a scale factor of less then 1. 
+
+if scaling is disabled the program will error rather than continue.
 
 # How to use
 

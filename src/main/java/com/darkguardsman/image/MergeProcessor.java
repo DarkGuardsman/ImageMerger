@@ -148,40 +148,14 @@ public class MergeProcessor
                 }
                 else
                 {
-                    int scaleW = -1;
-                    int scaleH = -1;
-
                     //Check scaling
-                    if (w == width)
-                    {
-                        scaleW = 1;
-                    }
-                    else if (w > width && w % width == 0)
-                    {
-                        scaleW = w / width;
-                    }
-                    else if (width > w && width % w == 0)
-                    {
-                        scaleW = width / w;
-                    }
-
-                    if (h == height)
-                    {
-                        scaleH = 1;
-                    }
-                    else if (h > height && h % height == 0)
-                    {
-                        scaleH = h / height;
-                    }
-                    else if (height > h && height % h == 0)
-                    {
-                        scaleH = height / h;
-                    }
+                    final int scaleW = getScale(w, width);
+                    final int scaleH = getScale(h, height);
 
                     //Do scaling only if we have something to scale
                     if (scaleW != 1 || scaleH != 1)
                     {
-                        //validate scaling factor
+                        //validate scaling factor, -1 can't scale, odd can't scale
                         if (scaleW == -1)
                         {
                             ImageMerger.error("MergeProcessor >> Image widths scaling is only valid for factors of 2, expected " + width + " got " + w + ". File: " + image.file.getAbsolutePath(), true);
@@ -205,6 +179,30 @@ public class MergeProcessor
                 }
             }
         }
+    }
+
+    /**
+     * Checks scale difference between two sizes
+     *
+     * @param a - size 1
+     * @param b - size 2
+     * @return 1 if they match, -1 if they don't match and can't scale without loss, anything else for simple multiplication
+     */
+    private static int getScale(int a, int b)
+    {
+        if (a == b)
+        {
+            return 1;
+        }
+        else if (a > b && a % b == 0)
+        {
+            return a / b;
+        }
+        else if (b > a && b % a == 0)
+        {
+            return b / a;
+        }
+        return -1;
     }
 
     /**

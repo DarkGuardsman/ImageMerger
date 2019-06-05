@@ -47,6 +47,10 @@ public class ImageMerger
                 {
                     data.outputFolder = new File(argMap.get("output"));
                 }
+                if(argMap.containsKey("scale"))
+                {
+                    data.allowScaling = Boolean.parseBoolean(argMap.get("scale"));
+                }
                 if (argMap.containsKey("merge"))
                 {
                     data.mergeAll = true;
@@ -177,6 +181,10 @@ public class ImageMerger
         if (jsonData.has("merge_all"))
         {
             mergeData.mergeAll = jsonData.get("merge_all").getAsBoolean();
+        }
+        if(jsonData.has("scale"))
+        {
+            mergeData.allowScaling = jsonData.get("scale").getAsBoolean();
         }
 
         //Load files
