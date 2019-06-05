@@ -26,7 +26,7 @@ public class MergeProcessor
         ImageMerger.info("\nFlattening folders paths to file paths...");
         ImageMerger.info("Files: " + data.baseImageFiles.size() + " " + data.mergeImageFiles.size());
         flattenFiles(data);
-        ImageMerger.info("Files: " + data.baseImageFiles.size() + " " + data.mergeImageFiles.size());
+        ImageMerger.info("Files: " + data.baseImages.size() + " " + data.mergeImages.size());
 
         ImageMerger.info("\nValidating files...");
         validateFiles(data);
