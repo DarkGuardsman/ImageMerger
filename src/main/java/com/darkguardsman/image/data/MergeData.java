@@ -19,6 +19,7 @@ public class MergeData
     public File outputFolder;
 
     public boolean mergeAll = true;
+    public boolean allowScaling = true;
 
     public void setup(File root)
     {
