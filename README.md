@@ -91,15 +91,28 @@ if scaling is enable the program will attempt to up size images to match the lar
 
 if scaling is disabled the program will error rather than continue.
 
-# How to use
+# How to run
 
 ## Option 1
 Create a file named "image-merger-run.json" in the same directory that the jar will be executed from inside.
 
+Ex:
+* jar and json are both located in the same folder
+* Open terminal
+* Run: java -jar image-merger.jar
+
 ## Option 2
-Create a file named "image-merger-run.json" then when executing the jar supply -json="path/to/json/image-merger-run.json" as an argument.
+Create a file named "merge-task.json" then when executing the jar supply -json="path/to/json/merge-task.json" as an argument.
+
+Ex: 
+* jar and json are both located in the same folder
+* Open terminal
+* Run: java -jar image-merger.jar -json=merge-task.json
 
 ## Option 3
 Execute the jar with a list of images and merge images.
 
-Ex: java jar image-merger.jar -baseImages="folderA" -mergeImages="folderB"
+Ex:
+* jar and file are both located in the same folder
+* Open terminal
+* Run: java -jar image-merger.jar -baseImages="folderA" -mergeImages="folderB"
