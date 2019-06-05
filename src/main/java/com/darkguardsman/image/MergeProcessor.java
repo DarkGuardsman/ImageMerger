@@ -116,11 +116,11 @@ public class MergeProcessor
                 final int h = image.image.getHeight();
                 if (w != width)
                 {
-                    ImageMerger.error("MergeProcessor >> Image widths do not match, expected " + width + " got " + w + ". File: " + image.file, true);
+                    ImageMerger.error("MergeProcessor >> Image widths do not match, expected " + width + " got " + w + ". File: " + image.file.getAbsolutePath(), true);
                 }
                 else if (h != height)
                 {
-                    ImageMerger.error("MergeProcessor >> Image heights do not match, expected " + height + " got " + h + ". File: " + image.file, true);
+                    ImageMerger.error("MergeProcessor >> Image heights do not match, expected " + height + " got " + h + ". File: " + image.file.getAbsolutePath(), true);
                 }
             }
         }
@@ -181,7 +181,7 @@ public class MergeProcessor
 
     public static void outputImage(BufferedImage combined, File out) throws IOException
     {
-        ImageMerger.info("Outputting file: " + out);
+        ImageMerger.info("Outputting file: " + out.getAbsolutePath());
         ImageIO.write(combined, "PNG", out);
     }
 }
