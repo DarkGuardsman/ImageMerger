@@ -116,3 +116,8 @@ Ex:
 * jar and file are both located in the same folder
 * Open terminal
 * Run: java -jar image-merger.jar -baseImages="folderA" -mergeImages="folderB"
+
+# Examples
+
+This was built for SBM-ElevatorBlock to generate sub versions of the 16 colored textures with different styles to indicate function. 
+https://github.com/BuiltBrokenModding/SBM-ElevatorBlock/tree/master/images
