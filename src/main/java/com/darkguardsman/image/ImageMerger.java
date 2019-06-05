@@ -30,8 +30,15 @@ public class ImageMerger
 
             if (argMap.containsKey("json"))
             {
-                info("Json path set to '" + argMap.get("json") + "'");
-                json(new File(argMap.get("json")));
+                final String jsonPath = argMap.get("json");
+                info("Json path set to '" + jsonPath + "'");
+
+                //Split in case we are running a batch job or need to run several steps or merging
+                final String[] paths = jsonPath.split(";");
+                for (String path : paths)
+                {
+                    json(new File(path));
+                }
             }
             else if (argMap.containsKey("baseImages") && argMap.containsKey("mergeImages"))
             {
@@ -40,11 +47,11 @@ public class ImageMerger
                 {
                     data.outputFolder = new File(argMap.get("output"));
                 }
-                if(argMap.containsKey("merge"))
+                if (argMap.containsKey("merge"))
                 {
                     data.mergeAll = true;
                 }
-                if(argMap.containsKey("permutate"))
+                if (argMap.containsKey("permutate"))
                 {
                     data.mergeAll = false;
                 }
@@ -76,7 +83,7 @@ public class ImageMerger
         }
         else
         {
-            File file = findJsonFile();
+            final File file = findJsonFile();
             if (file != null)
             {
                 info("Found json at " + file);
@@ -119,37 +126,40 @@ public class ImageMerger
 
     public static void json(File file) throws IOException
     {
-        if(file.exists())
+        if (file.exists())
         {
             BufferedReader br = new BufferedReader(new FileReader(file));
             JsonParser parser = new JsonParser();
             JsonObject jsonData = parser.parse(br).getAsJsonObject();
+            br.close();
 
-            final MergeData mergeData = new MergeData();
-            if (jsonData.has("output"))
+            //Json array of tasks or files to load
+            if (jsonData.has("json"))
             {
-                mergeData.outputFolder = new File(jsonData.getAsJsonPrimitive("output").getAsString());
+                final JsonArray baseImages = jsonData.getAsJsonArray("json");
+                for (JsonElement element : baseImages)
+                {
+                    //Basic Task
+                    if (element.isJsonObject())
+                    {
+                        json(file.getParentFile(), element.getAsJsonObject());
+                    }
+                    //Another file to load
+                    else if (element.isJsonPrimitive())
+                    {
+                        json(new File(file.getParent(), element.getAsString()));
+                    }
+                    else
+                    {
+                        error("Error loading batch data from JSON. Json array entries need to be an object containing data or a string path to another json file. File: " + file.getAbsolutePath(), true);
+                    }
+                }
             }
-            if(jsonData.has("merge"))
+            //Normal runtime
+            else
             {
-                mergeData.mergeAll = jsonData.get("merge").getAsBoolean();
+                json(file.getParentFile(), jsonData);
             }
-
-            //Load files
-            JsonArray baseImages = jsonData.getAsJsonArray("base");
-            JsonArray mergeImages = jsonData.getAsJsonArray("merge");
-
-            for(JsonElement element : baseImages)
-            {
-                mergeData.baseImageFiles.add(new File(element.getAsString()));
-            }
-            for(JsonElement element : mergeImages)
-            {
-                mergeData.mergeImageFiles.add(new File(element.getAsString()));
-            }
-
-            //Run
-            MergeProcessor.process(file.getParentFile(), mergeData);
         }
         else
         {
@@ -157,10 +167,39 @@ public class ImageMerger
         }
     }
 
+    public static void json(File root, JsonObject jsonData) throws IOException
+    {
+        final MergeData mergeData = new MergeData();
+        if (jsonData.has("output"))
+        {
+            mergeData.outputFolder = new File(jsonData.getAsJsonPrimitive("output").getAsString());
+        }
+        if (jsonData.has("merge"))
+        {
+            mergeData.mergeAll = jsonData.get("merge").getAsBoolean();
+        }
+
+        //Load files
+        JsonArray baseImages = jsonData.getAsJsonArray("base");
+        JsonArray mergeImages = jsonData.getAsJsonArray("merge");
+
+        for (JsonElement element : baseImages)
+        {
+            mergeData.baseImageFiles.add(new File(root, element.getAsString()));
+        }
+        for (JsonElement element : mergeImages)
+        {
+            mergeData.mergeImageFiles.add(new File(root, element.getAsString()));
+        }
+
+        //Run
+        MergeProcessor.process(root, mergeData);
+    }
+
     public static void error(String msg, boolean exit)
     {
         System.err.println("[ImageMerger] " + msg);
-        if(exit)
+        if (exit)
         {
             System.exit(1);
         }
